@@ -1,0 +1,1 @@
+Powershell -executionpolicy bypass -File .\Installer.ps1

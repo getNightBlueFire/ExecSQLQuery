@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<LangVersion>8</LangVersion>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Deploy\**" />
+	  <EmbeddedResource Remove="Deploy\**" />
+	  <None Remove="Deploy\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="EntityFramework">
+			<HintPath>..\External\EntityFramework.dll</HintPath>
+		</Reference>
+		<Reference Include="EntityFramework.SqlServer">
+			<HintPath>..\External\EntityFramework.SqlServer.dll</HintPath>
+		</Reference>
+		<Reference Include="log4net">
+			<HintPath>..\External\log4net.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.BusinessLayer.EF">
+			<HintPath>..\External\RnD.BusinessLayer.EF.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.BusinessLayer.Interfaces">
+			<HintPath>..\External\RnD.BusinessLayer.Interfaces.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.Common">
+			<HintPath>..\External\RnD.Common.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.Customizations.API">
+			<HintPath>..\External\RnD.Customizations.API.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.Customizations.Interfaces">
+			<HintPath>..\External\RnD.Customizations.Interfaces.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.Messages.Client">
+			<HintPath>..\External\RnD.Messages.Client.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.Messages.Interfaces">
+			<HintPath>..\External\RnD.Messages.Interfaces.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.Model.EF">
+			<HintPath>..\External\RnD.Model.EF.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.SubstitutionSyntax">
+			<HintPath>..\External\RnD.SubstitutionSyntax.dll</HintPath>
+		</Reference>
+		<Reference Include="RnD.Uniconnect">
+			<HintPath>..\External\RnD.Uniconnect.dll</HintPath>
+		</Reference>
+		<Reference Include="RnDSuiteBackend">
+			<HintPath>..\External\RnDSuiteBackend.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Setup\" />
+	</ItemGroup>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;%25Public%25\OpcenterRDnL\DynamicLibraries\Approved&quot; /f&#xD;&#xA;xcopy &quot;$(TargetPath)&quot; &quot;%25Public%25\OpcenterRDnL\DynamicLibraries\Approved&quot; /f&#xD;&#xA;xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(ProjectDir)Deploy\Functions\&quot; /f /y /i&#xD;&#xA;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)Deploy\Functions\&quot; /f /y /i" />
+	</Target>
+</Project>
