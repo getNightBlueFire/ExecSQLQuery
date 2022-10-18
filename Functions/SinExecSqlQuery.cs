@@ -62,8 +62,10 @@ namespace SinExecSQLQuery.Functions
         /// <param name="aMethod">Метод</param>
         private string SubstituteParams(string sqlQuery, IMethod aMethod)
         {
-            var methodHandler = new MethodHandler(aMethod, DatabaseContext);
+            //var methodHandler = new MethodHandler(aMethod, DatabaseContext);
             var sampleHandler = new SampleHandler(aMethod, DatabaseContext, API);
+            var requestHandler = new RequestHandler(aMethod, DatabaseContext, API);
+            var specificationHandler = new SpecificationHandler(aMethod, DatabaseContext, API);
             var userHandler = new UserHandler(API, DatabaseContext);
             var pattern = new Regex("([\\w]+)\\.([\\w]+)(?:\\[([\\-\\s\\w]+)\\])?");
             var matches = pattern.Matches(sqlQuery);
@@ -72,7 +74,9 @@ namespace SinExecSQLQuery.Functions
             {
                 IHandler handler = match.Groups[1].Value switch
                 {
-                    "Method" => methodHandler,
+                    //"Method" => methodHandler,
+                    "Specification" => specificationHandler,
+                    "Request" => requestHandler,
                     "Sample" => sampleHandler,
                     "User" => userHandler,
                     _ => throw new NotSupportedException($"Класс {match.Groups[1].Value} неизвестен или не поддерживается.")

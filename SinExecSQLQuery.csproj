@@ -10,46 +10,43 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="EntityFramework">
-			<HintPath>..\External\EntityFramework.dll</HintPath>
-		</Reference>
-		<Reference Include="EntityFramework.SqlServer">
-			<HintPath>..\External\EntityFramework.SqlServer.dll</HintPath>
+		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
 		</Reference>
 		<Reference Include="log4net">
-			<HintPath>..\External\log4net.dll</HintPath>
+		  <HintPath>..\..\..\..\..\Desktop\Customizations\Dependencies\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.BusinessLayer.EF">
-			<HintPath>..\External\RnD.BusinessLayer.EF.dll</HintPath>
+		  <HintPath>..\..\..\..\..\..\..\inetpub\wwwroot\OpcenterRDnLBackEnd\bin\RnD.BusinessLayer.EF.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.BusinessLayer.Interfaces">
-			<HintPath>..\External\RnD.BusinessLayer.Interfaces.dll</HintPath>
+		  <HintPath>..\..\..\..\..\..\..\inetpub\wwwroot\OpcenterRDnLBackEnd\bin\RnD.BusinessLayer.Interfaces.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.Common">
-			<HintPath>..\External\RnD.Common.dll</HintPath>
+		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\RnD.Common.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.Customizations.API">
-			<HintPath>..\External\RnD.Customizations.API.dll</HintPath>
+		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\RnD.Customizations.API.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.Customizations.Interfaces">
-			<HintPath>..\External\RnD.Customizations.Interfaces.dll</HintPath>
+		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\RnD.Customizations.Interfaces.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.Messages.Client">
-			<HintPath>..\External\RnD.Messages.Client.dll</HintPath>
+		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\RnD.Messages.Client.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.Messages.Interfaces">
-			<HintPath>..\External\RnD.Messages.Interfaces.dll</HintPath>
+		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\RnD.Messages.Interfaces.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.Model.EF">
-			<HintPath>..\External\RnD.Model.EF.dll</HintPath>
+		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\RnD.Model.EF.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.SubstitutionSyntax">
-			<HintPath>..\External\RnD.SubstitutionSyntax.dll</HintPath>
+		  <HintPath>..\..\..\..\..\..\..\inetpub\wwwroot\OpcenterRDnLUniconnect\bin\RnD.SubstitutionSyntax.dll</HintPath>
 		</Reference>
 		<Reference Include="RnD.Uniconnect">
-			<HintPath>..\External\RnD.Uniconnect.dll</HintPath>
+		  <HintPath>..\..\..\..\..\..\..\inetpub\wwwroot\OpcenterRDnLUniconnect\bin\RnD.Uniconnect.dll</HintPath>
 		</Reference>
 		<Reference Include="RnDSuiteBackend">
-			<HintPath>..\External\RnDSuiteBackend.dll</HintPath>
+		  <HintPath>..\..\..\..\..\..\..\inetpub\wwwroot\OpcenterRDnLBackEnd\bin\RnDSuiteBackend.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>
