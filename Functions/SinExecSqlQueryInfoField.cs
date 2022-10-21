@@ -36,7 +36,7 @@ namespace SinExecSQLQueryInfoField.Functions
             if (!(aArguments[0] is string sqlQuery))
                 throw new ArgumentException();
 
-            sqlQuery = "";
+            sqlQuery = "Specification.InfoField.[Test]";
             sqlQuery = SubstituteParams(sqlQuery, aInfoCard, aCalculatedInfoField);
 
             if (sqlQuery == null)
@@ -44,10 +44,8 @@ namespace SinExecSQLQueryInfoField.Functions
                 var sqlResult = ExecuteSql(sqlQuery);
                 return sqlResult.ValueType.ToString();
             }
-            return "X";
+            return "";
             
-            
-
         }
 
         private string SubstituteParams(string sqlQuery, IInfoCard aInfoCard, IInfoField aCalculatedInfoField)
@@ -56,7 +54,6 @@ namespace SinExecSQLQueryInfoField.Functions
             var specificationHandler = new SpecificationHandler(DatabaseContext, API, aInfoCard, aCalculatedInfoField);
             var userHandler = new UserHandler(DatabaseContext, API, aInfoCard, aCalculatedInfoField);
             var requestHandler = new RequestHandler(DatabaseContext, API, aInfoCard, aCalculatedInfoField);
-
 
             var pattern = new Regex("([\\w]+)\\.([\\w]+)(?:\\[([\\-\\s\\w]+)\\])?");
             var matches = pattern.Matches(sqlQuery);

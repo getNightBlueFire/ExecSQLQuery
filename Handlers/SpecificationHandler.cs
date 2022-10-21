@@ -43,7 +43,8 @@ namespace SinExecSQLQueryInfoField.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteInfoField(string argument)
         {
-            var specification = _aApi.Specification.GetSpecification("Test3");
+            var specification = (ISpecification)_infoCard.ParentInstance;
+
             var infoField = specification.InfoCards
                 .SelectMany(x => x.InfoFields)
                 .First(x => x.ShortDescription == argument);
@@ -57,7 +58,7 @@ namespace SinExecSQLQueryInfoField.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteAttribute(string argument)
         {
-            var specification = _aApi.Specification.GetSpecification("Test3");
+            var specification = (ISpecification)_infoCard.ParentInstance;
             var attribute = specification.Attributes.FirstOrDefault(x => x.ShortDescription == argument);
 
             if (attribute == null)
@@ -72,13 +73,14 @@ namespace SinExecSQLQueryInfoField.Handlers
         /// <param name="argument">Аргумент запроса(название столбца из таблицы RndtSc).</param>
         private object ExecuteProperty(string argument)
         {
+            var specification = (ISpecification)_infoCard.ParentInstance;
             var rndvSc = _dataContext
-                .RndvSp.Local.FirstOrDefault(x => x.SP == 1
-                                                  && x.SP_VALUE == "Test");
+                .RndvSp.Local.FirstOrDefault(x => x.SP_VERSION == specification.Version
+                                                  && x.SP_VALUE == specification.SpecificationValue);
             if (rndvSc == null)
             {
-                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSp, x => x.SP == 1
-                    && x.SP_VALUE == "Test3");
+                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSp, x => x.SP_VERSION == specification.Version
+                                                  && x.SP_VALUE == specification.SpecificationValue);
             }
 
             if (rndvSc == null)

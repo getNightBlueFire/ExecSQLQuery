@@ -43,7 +43,7 @@ namespace SinExecSQLQueryInfoField.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteInfoField(string argument)
         {
-            var sample = _aApi.Sample.GetSample("");
+            var sample = (ISample)_infoCard.ParentInstance;
             var infoField = sample.InfoCards
                 .SelectMany(x => x.InfoFields)
                 .First(x => x.ShortDescription == argument);
@@ -57,7 +57,7 @@ namespace SinExecSQLQueryInfoField.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteAttribute(string argument)
         {
-            var sample = _aApi.Sample.GetSample("");
+            var sample = (ISample)_infoCard.ParentInstance;
             var attribute = sample.Attributes.FirstOrDefault(x => x.ShortDescription == argument);
 
             if (attribute == null)
@@ -72,13 +72,12 @@ namespace SinExecSQLQueryInfoField.Handlers
         /// <param name="argument">Аргумент запроса(название столбца из таблицы RndtSc).</param>
         private object ExecuteProperty(string argument)
         {
+            var sample = (ISample)_infoCard.ParentInstance;
             var rndvSc = _dataContext
-                .RndvSc.Local.FirstOrDefault(x => x.SC == 1
-                                                  && x.SC_VALUE == "");
+                .RndvSc.Local.FirstOrDefault(x => x.SC ==sample.ID);
             if (rndvSc == null)
             {
-                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSc, x => x.SC == 1
-                    && x.SC_VALUE == "");
+                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSc, x => x.SC == sample.ID);
             }
 
             if (rndvSc == null)
