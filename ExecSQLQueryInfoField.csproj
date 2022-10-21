@@ -12,9 +12,6 @@
 		<Reference Include="EntityFramework">
 		  <HintPath>..\..\..\..\Customizations\Customizations_\Dependencies\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
 		</Reference>
-		<Reference Include="log4net">
-		  <HintPath>..\..\..\..\..\Desktop\Customizations\Dependencies\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-		</Reference>
 		<Reference Include="RnD.BusinessLayer.EF">
 		  <HintPath>..\..\..\..\..\..\..\inetpub\wwwroot\OpcenterRDnLBackEnd\bin\RnD.BusinessLayer.EF.dll</HintPath>
 		</Reference>

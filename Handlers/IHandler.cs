@@ -1,4 +1,4 @@
-﻿namespace SinExecSQLQueryInfoField.Handlers
+﻿namespace ExecSQLQueryInfoField.Handlers
 {
     /// <summary>
     /// Интерфейс для обработки частей запроса.

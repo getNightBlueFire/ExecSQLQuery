@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SinExecSQLQueryInfoField.Exceptions
+namespace ExecSQLQueryInfoField.Exceptions
 {
     public class NotFoundException : Exception
     {

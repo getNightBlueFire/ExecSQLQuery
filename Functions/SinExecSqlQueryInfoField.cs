@@ -8,44 +8,53 @@ using RnD.API;
 using RnD.Attributes;
 using RnD.CustomFunctionTypes;
 using RnD.Model;
-using SinExecSQLQueryInfoField.Handlers;
-using SinExecSQLQueryInfoField.Services;
+using ExecSQLQueryInfoField.Handlers;
+using ExecSQLQueryInfoField.Services;
 using ValueType = RnD.ValueType;
 
-namespace SinExecSQLQueryInfoField.Functions
+namespace ExecSQLQueryInfoField.Functions
 {
     /// <summary>
     /// Функция, позволяющая выполнять произвольный SQL-запрос и использовать результат этого запроса в качестве значения ячейки.
     /// </summary>
-    [CustomFunction("SinExecSqlQueryInfoField", RnD.Common.Enums.CustomFunctionType.InfoFieldCalculationFunction)]
-    public class SinExecSqlQueryInfoField : AdvancedCustomFunction, IStringInfoFieldCustomCalculationFuncion
+    [CustomFunction("ExecSqlQueryInfoField", RnD.Common.Enums.CustomFunctionType.InfoFieldCalculationFunction)]
+    public class ExecSqlQueryInfoField : AdvancedCustomFunction, IStringInfoFieldCustomCalculationFuncion
     {
         private readonly List<string> _badWords = new List<string> {
             "CREATE", "DROP", "UPDATE", "INSERT", "ALTER", "DELETE", "ATTACH", "DETACH"
         };
 
-        public SinExecSqlQueryInfoField(IAPI aAPI) : base(aAPI)
+        public ExecSqlQueryInfoField(IAPI aAPI) : base(aAPI)
         {
         }
 
         public string Execute(List<object> aArguments, IInfoCard aInfoCard, IInfoField aCalculatedInfoField)
-        {
-            if (aArguments.Count < 0)
-                throw new ArgumentException();
-
-            if (!(aArguments[0] is string sqlQuery))
-                throw new ArgumentException();
-
-            sqlQuery = "Specification.InfoField.[Test]";
-            sqlQuery = SubstituteParams(sqlQuery, aInfoCard, aCalculatedInfoField);
-
-            if (sqlQuery == null)
+        {            
+            try
             {
+                if (aArguments.Count < 0)
+                    throw new ArgumentException();
+
+                if (!(aArguments[0] is string sqlQuery))
+                    throw new ArgumentException();
+                sqlQuery = SubstituteParams(sqlQuery, aInfoCard, aCalculatedInfoField);
+                if (sqlQuery == null)
+                    return String.Empty;
+
                 var sqlResult = ExecuteSql(sqlQuery);
-                return sqlResult.ValueType.ToString();
+                return sqlResult;
             }
-            return "";
-            
+            catch (ArgumentException e)
+            {
+                MessageService.SendErrorMessage("Пустая формула");
+                return String.Empty;
+            }
+            catch (Exception e)
+            {
+                MessageService.SendErrorMessage("Ошибка выполнения ExecSQLQueryInfoField");
+                return String.Empty;
+            }
+
         }
 
         private string SubstituteParams(string sqlQuery, IInfoCard aInfoCard, IInfoField aCalculatedInfoField)
@@ -85,7 +94,7 @@ namespace SinExecSQLQueryInfoField.Functions
             }
             return sqlQuery;
         }
-        private ValueType ExecuteSql(string sqlQuery)
+        public string ExecuteSql(string sqlQuery)
         {
             if (_badWords.Any(sqlQuery.Contains))
                 throw new Exception("Потенциально опасный запрос.");
@@ -101,28 +110,28 @@ namespace SinExecSQLQueryInfoField.Functions
                 var value = command.ExecuteScalar();
 
                 if (value == null)
-                    return EmptyValue.Instance;
+                    return String.Empty;
 
                 switch (value)
                 {
                     case string strValue:
-                        return new StringValue(strValue);
+                        return strValue;
                     case bool boolValue:
-                        return new BooleanValue(boolValue);
+                        return boolValue.ToString();
                     case int _:
                     case double _:
                     case float _:
                     case decimal _:
-                        return new DecimalValue(Convert.ToDecimal(value));
+                        return value.ToString();
                     default:
                         throw new Exception();
                 }
             }
             catch (Exception e)
             {
-                Log.Error($"Ошибка выполнения Sql запроса: {sqlQuery}", e);
+                
                 MessageService.SendErrorMessage("Ошибка выполнения Sql запроса");
-                return EmptyValue.Instance;
+                return String.Empty;
             }
         }
 

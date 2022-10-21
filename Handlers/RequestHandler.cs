@@ -2,14 +2,14 @@
 using RnD.Common.Enums;
 using RnD.Model;
 using RnD.Model.EF;
-using SinExecSQLQueryInfoField.Exceptions;
+using ExecSQLQueryInfoField.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SinExecSQLQueryInfoField.Handlers
+namespace ExecSQLQueryInfoField.Handlers
 {
     public class RequestHandler : IHandler
     {

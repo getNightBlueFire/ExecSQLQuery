@@ -3,9 +3,9 @@ using System.Linq;
 using RnD.Common.Enums;
 using RnD.Model;
 using RnD.Model.EF;
-using SinExecSQLQueryInfoField.Exceptions;
+using ExecSQLQueryInfoField.Exceptions;
 
-namespace SinExecSQLQueryInfoField.Handlers
+namespace ExecSQLQueryInfoField.Handlers
 {
     /// <summary>
     /// Обработчик обращения к методу.
