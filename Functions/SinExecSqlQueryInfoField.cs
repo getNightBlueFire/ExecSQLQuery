@@ -8,27 +8,27 @@ using RnD.API;
 using RnD.Attributes;
 using RnD.CustomFunctionTypes;
 using RnD.Model;
-using SinExecSQLQuery.Handlers;
-using SinExecSQLQuery.Services;
+using SinExecSQLQueryInfoField.Handlers;
+using SinExecSQLQueryInfoField.Services;
 using ValueType = RnD.ValueType;
 
-namespace SinExecSQLQuery.Functions
+namespace SinExecSQLQueryInfoField.Functions
 {
     /// <summary>
     /// Функция, позволяющая выполнять произвольный SQL-запрос и использовать результат этого запроса в качестве значения ячейки.
     /// </summary>
-    [CustomFunction("SinExecSqlQuery", RnD.Common.Enums.CustomFunctionType.CalculationFunction)]
-    public class SinExecSqlQuery : AdvancedCustomFunction, IMethodCellCustomCalculation
+    [CustomFunction("SinExecSqlQueryInfoField", RnD.Common.Enums.CustomFunctionType.InfoFieldCalculationFunction)]
+    public class SinExecSqlQueryInfoField : AdvancedCustomFunction, IStringInfoFieldCustomCalculationFuncion
     {
-        private readonly List<string> _badWords  = new List<string> {
+        private readonly List<string> _badWords = new List<string> {
             "CREATE", "DROP", "UPDATE", "INSERT", "ALTER", "DELETE", "ATTACH", "DETACH"
         };
 
-        public SinExecSqlQuery(IAPI aAPI) : base(aAPI)
+        public SinExecSqlQueryInfoField(IAPI aAPI) : base(aAPI)
         {
         }
 
-        public ValueType Execute(List<object> aArguments, IMethod aMethod, IMethodCell aCalculatedCell)
+        public string Execute(List<object> aArguments, IInfoCard aInfoCard, IInfoField aCalculatedInfoField)
         {
             if (aArguments.Count < 0)
                 throw new ArgumentException();
@@ -36,37 +36,28 @@ namespace SinExecSQLQuery.Functions
             if (!(aArguments[0] is string sqlQuery))
                 throw new ArgumentException();
 
-            try
+            sqlQuery = "";
+            sqlQuery = SubstituteParams(sqlQuery, aInfoCard, aCalculatedInfoField);
+
+            if (sqlQuery == null)
             {
-                sqlQuery = SubstituteParams(sqlQuery, aMethod);
-
-                if (sqlQuery == null)
-                    return EmptyValue.Instance;
-
                 var sqlResult = ExecuteSql(sqlQuery);
+                return sqlResult.ValueType.ToString();
+            }
+            return "X";
+            
+            
 
-                return sqlResult;
-            }
-            catch (Exception e)
-            {
-                Log.Error("Ошибка выполнения SinExecSqlQuery", e);
-                MessageService.SendErrorMessage("Ошибка выполнения SinExecSqlQuery");
-                return EmptyValue.Instance;
-            }
         }
 
-        /// <summary>
-        /// Сопоставляет пришедшие параметры запроса.
-        /// </summary>
-        /// <param name="sqlQuery">Sql запрос</param>
-        /// <param name="aMethod">Метод</param>
-        private string SubstituteParams(string sqlQuery, IMethod aMethod)
+        private string SubstituteParams(string sqlQuery, IInfoCard aInfoCard, IInfoField aCalculatedInfoField)
         {
-            //var methodHandler = new MethodHandler(aMethod, DatabaseContext);
-            var sampleHandler = new SampleHandler(aMethod, DatabaseContext, API);
-            var requestHandler = new RequestHandler(aMethod, DatabaseContext, API);
-            var specificationHandler = new SpecificationHandler(aMethod, DatabaseContext, API);
-            var userHandler = new UserHandler(API, DatabaseContext);
+            var sampleHandler = new SampleHandler(DatabaseContext, API, aInfoCard, aCalculatedInfoField);
+            var specificationHandler = new SpecificationHandler(DatabaseContext, API, aInfoCard, aCalculatedInfoField);
+            var userHandler = new UserHandler(DatabaseContext, API, aInfoCard, aCalculatedInfoField);
+            var requestHandler = new RequestHandler(DatabaseContext, API, aInfoCard, aCalculatedInfoField);
+
+
             var pattern = new Regex("([\\w]+)\\.([\\w]+)(?:\\[([\\-\\s\\w]+)\\])?");
             var matches = pattern.Matches(sqlQuery);
 
@@ -74,35 +65,29 @@ namespace SinExecSQLQuery.Functions
             {
                 IHandler handler = match.Groups[1].Value switch
                 {
-                    //"Method" => methodHandler,
-                    "Specification" => specificationHandler,
                     "Request" => requestHandler,
                     "Sample" => sampleHandler,
+                    "Specification" => specificationHandler,
                     "User" => userHandler,
                     _ => throw new NotSupportedException($"Класс {match.Groups[1].Value} неизвестен или не поддерживается.")
                 };
 
                 var value = handler.Execute(match.Groups[2].Value, match.Groups[3].Value);
 
-                if(value == null)
+                if (value == null)
                     return null;
-                
+
                 string strValue;
 
                 if (value is string str && !double.TryParse(str, out var _))
                     strValue = "'" + str + "'";
                 else
                     strValue = value.ToString();
-                
+
                 sqlQuery = sqlQuery.Replace(match.Groups[0].Value, strValue);
             }
             return sqlQuery;
         }
-
-        /// <summary>
-        /// Выполняет Sql запрос
-        /// </summary>
-        /// <param name="sqlQuery">Sql запрос</param>
         private ValueType ExecuteSql(string sqlQuery)
         {
             if (_badWords.Any(sqlQuery.Contains))
@@ -143,5 +128,6 @@ namespace SinExecSQLQuery.Functions
                 return EmptyValue.Instance;
             }
         }
+
     }
 }

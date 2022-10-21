@@ -1,7 +1,7 @@
 ﻿using RnD.Messages.Client;
 using RnD.Messages.Interfaces.Data;
 
-namespace SinExecSQLQuery.Services
+namespace SinExecSQLQueryInfoField.Services
 {
     /// <summary>
     /// Сервис отправки сообщений об ошибках.

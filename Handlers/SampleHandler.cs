@@ -4,22 +4,24 @@ using RnD.API;
 using RnD.Common.Enums;
 using RnD.Model;
 using RnD.Model.EF;
-using SinExecSQLQuery.Exceptions;
+using SinExecSQLQueryInfoField.Exceptions;
 
-namespace SinExecSQLQuery.Handlers
+namespace SinExecSQLQueryInfoField.Handlers
 {
     /// <summary>
     /// Обработчик обращения к пробе.
     /// </summary>
     public class SampleHandler : IHandler
     {
-        private readonly IMethod _aMethod;
         private readonly RnDConnection _dataContext;
         private readonly IAPI _aApi;
+        private readonly IInfoCard _infoCard;
+        private readonly IInfoField _infoField;
         
-        public SampleHandler(IMethod aMethod, RnDConnection dataContext, IAPI aApi)
+        public SampleHandler(RnDConnection dataContext, IAPI aApi, IInfoCard infoCard, IInfoField info)
         {
-            _aMethod = aMethod;
+            _infoCard = infoCard;
+            _infoField = info;
             _dataContext = dataContext;
             _aApi = aApi;
         }
@@ -41,7 +43,7 @@ namespace SinExecSQLQuery.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteInfoField(string argument)
         {
-            var sample = _aApi.Sample.GetSample(_aMethod.Sample);
+            var sample = _aApi.Sample.GetSample("");
             var infoField = sample.InfoCards
                 .SelectMany(x => x.InfoFields)
                 .First(x => x.ShortDescription == argument);
@@ -55,7 +57,7 @@ namespace SinExecSQLQuery.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteAttribute(string argument)
         {
-            var sample = _aApi.Sample.GetSample(_aMethod.Sample);
+            var sample = _aApi.Sample.GetSample("");
             var attribute = sample.Attributes.FirstOrDefault(x => x.ShortDescription == argument);
 
             if (attribute == null)
@@ -71,12 +73,12 @@ namespace SinExecSQLQuery.Handlers
         private object ExecuteProperty(string argument)
         {
             var rndvSc = _dataContext
-                .RndvSc.Local.FirstOrDefault(x => x.SC == _aMethod.Sample
-                                                  && x.SC_VALUE == _aMethod.SampleShortDescription);
+                .RndvSc.Local.FirstOrDefault(x => x.SC == 1
+                                                  && x.SC_VALUE == "");
             if (rndvSc == null)
             {
-                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSc, x => x.SC == _aMethod.Sample
-                    && x.SC_VALUE == _aMethod.SampleShortDescription);
+                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSc, x => x.SC == 1
+                    && x.SC_VALUE == "");
             }
 
             if (rndvSc == null)

@@ -2,24 +2,26 @@
 using RnD.Common.Enums;
 using RnD.Model;
 using RnD.Model.EF;
-using SinExecSQLQuery.Exceptions;
+using SinExecSQLQueryInfoField.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SinExecSQLQuery.Handlers
+namespace SinExecSQLQueryInfoField.Handlers
 {
     public class SpecificationHandler : IHandler
     {
-        private readonly IMethod _aMethod;
         private readonly RnDConnection _dataContext;
         private readonly IAPI _aApi;
+        private readonly IInfoCard _infoCard;
+        private readonly IInfoField _infoField;
 
-        public SpecificationHandler(IMethod aMethod, RnDConnection dataContext, IAPI aApi)
+        public SpecificationHandler(RnDConnection dataContext, IAPI aApi, IInfoCard infoCard, IInfoField info)
         {
-            _aMethod = aMethod;
+            _infoCard = infoCard;
+            _infoField = info;
             _dataContext = dataContext;
             _aApi = aApi;
         }
@@ -41,7 +43,7 @@ namespace SinExecSQLQuery.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteInfoField(string argument)
         {
-            var specification = _aApi.Specification.GetSpecification(_aMethod.Description);
+            var specification = _aApi.Specification.GetSpecification("Test3");
             var infoField = specification.InfoCards
                 .SelectMany(x => x.InfoFields)
                 .First(x => x.ShortDescription == argument);
@@ -55,7 +57,7 @@ namespace SinExecSQLQuery.Handlers
         /// <param name="argument">Аргумент запроса(ShortDescription).</param>
         private object ExecuteAttribute(string argument)
         {
-            var specification = _aApi.Specification.GetSpecification(_aMethod.Description);
+            var specification = _aApi.Specification.GetSpecification("Test3");
             var attribute = specification.Attributes.FirstOrDefault(x => x.ShortDescription == argument);
 
             if (attribute == null)
@@ -71,12 +73,12 @@ namespace SinExecSQLQuery.Handlers
         private object ExecuteProperty(string argument)
         {
             var rndvSc = _dataContext
-                .RndvSp.Local.FirstOrDefault(x => x.SP == _aMethod.Sample
-                                                  && x.SP_VALUE == _aMethod.SampleShortDescription);
+                .RndvSp.Local.FirstOrDefault(x => x.SP == 1
+                                                  && x.SP_VALUE == "Test");
             if (rndvSc == null)
             {
-                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSp, x => x.SP == _aMethod.Sample
-                    && x.SP_VALUE == _aMethod.SampleShortDescription);
+                rndvSc = EnumExtensions.FirstOrDefault(_dataContext.RndvSp, x => x.SP == 1
+                    && x.SP_VALUE == "Test3");
             }
 
             if (rndvSc == null)

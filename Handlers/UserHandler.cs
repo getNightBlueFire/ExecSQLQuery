@@ -1,23 +1,28 @@
 ﻿using System;
 using RnD.API;
 using RnD.Common.Enums;
+using RnD.Model;
 using RnD.Model.EF;
-using SinExecSQLQuery.Exceptions;
+using SinExecSQLQueryInfoField.Exceptions;
 
-namespace SinExecSQLQuery.Handlers
+namespace SinExecSQLQueryInfoField.Handlers
 {
     /// <summary>
     /// Обработчик обращения к языку данных пользователя.
     /// </summary>
     public class UserHandler : IHandler
     {
-        private readonly IAPI _aAPI;
         private readonly RnDConnection _dataContext;
+        private readonly IAPI _aApi;
+        private readonly IInfoCard _infoCard;
+        private readonly IInfoField _infoField;
 
-        public UserHandler(IAPI aAPI, RnDConnection dataContext)
+        public UserHandler(RnDConnection dataContext, IAPI aApi, IInfoCard infoCard, IInfoField info)
         {
-            _aAPI = aAPI;
+            _infoCard = infoCard;
+            _infoField = info;
             _dataContext = dataContext;
+            _aApi = aApi;
         }
 
         public object Execute(string methodName, string argument = null)
@@ -25,7 +30,7 @@ namespace SinExecSQLQuery.Handlers
             if (methodName != "LanguageId")
                 throw new NotSupportedException($"Метод {methodName} неизвестен или не поддерживается.");
 
-            var userId = _aAPI.CustomizationSession.User.ID;
+            var userId = _aApi.CustomizationSession.User.ID;
             var dataLangId = _dataContext.RndvUsPref
                 .FirstOrDefault(x => x.US == userId && x.PREF_NAME == "DataLanguage")
                 .PREF_VALUE;
