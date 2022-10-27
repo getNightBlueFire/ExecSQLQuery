@@ -41,6 +41,7 @@ namespace ExecSQLQueryInfoField.Functions
                 if (sqlQuery == null)
                     return String.Empty;
 
+                sqlQuery = sqlQuery.Replace("#", "'");
                 var sqlResult = ExecuteSql(sqlQuery);
                 return sqlResult;
             }
