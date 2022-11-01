@@ -11,6 +11,7 @@ using RnD.Model;
 using ExecSQLQueryInfoField.Handlers;
 using ExecSQLQueryInfoField.Services;
 using ValueType = RnD.ValueType;
+using System.Text;
 
 namespace ExecSQLQueryInfoField.Functions
 {
@@ -41,8 +42,9 @@ namespace ExecSQLQueryInfoField.Functions
                 if (sqlQuery == null)
                     return String.Empty;
 
-                sqlQuery = sqlQuery.Replace("#", "'");
+                sqlQuery = sqlQuery.Replace("#", "'").Replace("SELECT '","SELECT N'");
                 var sqlResult = ExecuteSql(sqlQuery);
+
                 return sqlResult;
             }
             catch (ArgumentException e)
