@@ -42,7 +42,9 @@ namespace ExecSQLQueryInfoField.Functions
                 if (sqlQuery == null)
                     return String.Empty;
 
-                sqlQuery = sqlQuery.Replace("#", "'").Replace("SELECT '","SELECT N'");
+                sqlQuery = sqlQuery.Replace("#", "'")
+                    .Replace("SELECT"+ " '", "SELECT N'")
+                    .Replace("SELECT '","SELECT N'");
                 var sqlResult = ExecuteSql(sqlQuery);
 
                 return sqlResult;
