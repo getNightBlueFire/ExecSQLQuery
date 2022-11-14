@@ -12,6 +12,8 @@ using ExecSQLQueryInfoField.Handlers;
 using ExecSQLQueryInfoField.Services;
 using ValueType = RnD.ValueType;
 using System.Text;
+using NLog;
+using ExecSQLQueryInfoField.Exceptions;
 
 namespace ExecSQLQueryInfoField.Functions
 {
@@ -25,8 +27,12 @@ namespace ExecSQLQueryInfoField.Functions
             "CREATE", "DROP", "UPDATE", "INSERT", "ALTER", "DELETE", "ATTACH", "DETACH"
         };
 
+        public readonly IAPI test;
+        public readonly ILogger log = LogManager.GetCurrentClassLogger();
+
         public ExecSqlQueryInfoField(IAPI aAPI) : base(aAPI)
         {
+            test = aAPI;
         }
 
         public string Execute(List<object> aArguments, IInfoCard aInfoCard, IInfoField aCalculatedInfoField)
@@ -51,12 +57,23 @@ namespace ExecSQLQueryInfoField.Functions
             }
             catch (ArgumentException e)
             {
-                MessageService.SendErrorMessage("Пустая формула");
+                var exc = "Пустая формула";
+                log.Error(e, exc);
+                MessageService.SendErrorMessage(exc);
+                return String.Empty;
+            }
+            catch (NotFoundException e)
+            {
+                var exc = "Не найден аргумент";
+                log.Error(e, exc);
+                MessageService.SendErrorMessage(exc);
                 return String.Empty;
             }
             catch (Exception e)
             {
-                MessageService.SendErrorMessage("Ошибка выполнения ExecSQLQueryInfoField");
+                var exc = "Ошибка выполнения ExecSQLQueryInfoField";
+                log.Error(e, exc);
+                MessageService.SendErrorMessage(exc);
                 return String.Empty;
             }
 
@@ -134,8 +151,9 @@ namespace ExecSQLQueryInfoField.Functions
             }
             catch (Exception e)
             {
-                
-                MessageService.SendErrorMessage("Ошибка выполнения Sql запроса");
+                var exc = "Ошибка выполнения Sql запроса";
+                log.Error(e, exc);
+                MessageService.SendErrorMessage(exc);
                 return String.Empty;
             }
         }
