@@ -33,7 +33,7 @@ namespace ExecSQLQueryInfoField.Handlers
                 "InfoField" => ExecuteInfoField(argument),
                 "Attribute" => ExecuteAttribute(argument),
                 "Property" => ExecuteProperty(argument),
-                _ => throw new NotSupportedException($"Метод {methodName} неизвестен или не поддерживается.")
+                _ => throw new NotSupportedException($"\u041c\u0435\u0442\u043e\u0434\u0020{methodName}\u0020\u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u0435\u043d\u0020\u0438\u043b\u0438\u0020\u043d\u0435\u0020\u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044f\u002e")
             };
         }
 
@@ -47,7 +47,8 @@ namespace ExecSQLQueryInfoField.Handlers
             var infoField = request.InfoCards
                 .SelectMany(x => x.InfoFields)
                 .First(x => x.ShortDescription == argument);
-
+            if (infoField == null)
+                throw new NotFoundException($"Атрибут {argument} не найден.");
             return infoField.InfoFieldValueF ?? (object)infoField.InfoFieldValue;
         }
 

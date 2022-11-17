@@ -1,5 +1,6 @@
 ﻿using RnD.Messages.Client;
 using RnD.Messages.Interfaces.Data;
+using System;
 
 namespace ExecSQLQueryInfoField.Services
 {
@@ -8,7 +9,7 @@ namespace ExecSQLQueryInfoField.Services
     /// </summary>
     public static class MessageService
     {
-        public static void SendErrorMessage(string message)
+        public static void SendErrorMessage(string message, string username, string db, Guid guid)
         {
             var client = new NotificationClient();
     
@@ -19,10 +20,14 @@ namespace ExecSQLQueryInfoField.Services
                 {
                     Message = message
                 }
-            });
+            },
+            db,
+            username,
+            guid
+            );
         }
 
-        public static void SendInfoMessage(string message)
+        public static void SendInfoMessage(string message, string username, string db, Guid guid)
         {
             var client = new NotificationClient();
             client.SendTo(new Notification
@@ -32,7 +37,7 @@ namespace ExecSQLQueryInfoField.Services
                 {
                     Message = message
                 }
-            });
+            }, db, username, guid);
         }
     }
 }
