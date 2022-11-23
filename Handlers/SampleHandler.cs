@@ -5,6 +5,7 @@ using RnD.Common.Enums;
 using RnD.Model;
 using RnD.Model.EF;
 using ExecSQLQueryInfoField.Exceptions;
+using ExecSQLQueryInfoField.Services;
 
 namespace ExecSQLQueryInfoField.Handlers
 {
@@ -33,7 +34,7 @@ namespace ExecSQLQueryInfoField.Handlers
                 "InfoField" => ExecuteInfoField(argument),
                 "Attribute" => ExecuteAttribute(argument),
                 "Property" => ExecuteProperty(argument),
-                _ => throw new NotSupportedException($"\u041c\u0435\u0442\u043e\u0434\u0020{methodName}\u0020\u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u0435\u043d\u0020\u0438\u043b\u0438\u0020\u043d\u0435\u0020\u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044f\u002e")
+                _ => throw new NotSupportedException(MessagesConstant.METHOD_NOT_SUPPERTED)
             };
         }
 
@@ -46,9 +47,9 @@ namespace ExecSQLQueryInfoField.Handlers
             var sample = (ISample)_infoCard.ParentInstance;
             var infoField = sample.InfoCards
                 .SelectMany(x => x.InfoFields)
-                .First(x => x.ShortDescription == argument);
+                .FirstOrDefault(x => x.ShortDescription == argument);
             if (infoField == null)
-                throw new NotFoundException($"Атрибут {argument} не найден.");
+                throw new NotFoundException($"Атрибут {argument} не найден.", argument);
             return infoField.InfoFieldValueF ?? (object)infoField.InfoFieldValue;
         }
 
@@ -62,7 +63,7 @@ namespace ExecSQLQueryInfoField.Handlers
             var attribute = sample.Attributes.FirstOrDefault(x => x.ShortDescription == argument);
 
             if (attribute == null)
-                throw new NotFoundException($"Атрибут {argument} не найден.");
+                throw new NotFoundException($"Атрибут {argument} не найден.", argument);
 
             return attribute.Value;
         }
@@ -88,7 +89,7 @@ namespace ExecSQLQueryInfoField.Handlers
             var prop = type.GetProperty(argument);
 
             if (prop == null)
-                throw new NotFoundException($"Свойство {argument} не найдено.");
+                throw new NotFoundException($"Свойство {argument} не найдено.", argument);
 
             var value = prop.GetValue(rndvSc);
 

@@ -4,8 +4,10 @@ namespace ExecSQLQueryInfoField.Exceptions
 {
     public class NotFoundException : Exception
     {
-        public NotFoundException(string message) : base(message)
+        public string Argument { get; }
+        public NotFoundException(string message, string arg) : base(message)
         {
+            this.Argument = arg;
         }
     }
 }

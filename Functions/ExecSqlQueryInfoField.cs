@@ -14,6 +14,7 @@ using ValueType = RnD.ValueType;
 using System.Text;
 using NLog;
 using ExecSQLQueryInfoField.Exceptions;
+using NLog.Targets;
 
 namespace ExecSQLQueryInfoField.Functions
 {
@@ -28,6 +29,7 @@ namespace ExecSQLQueryInfoField.Functions
         };
 
         public readonly ILogger log = LogManager.GetCurrentClassLogger();
+        
         private readonly IAPI api;
         private readonly string username;
         private readonly string db;
@@ -63,28 +65,28 @@ namespace ExecSQLQueryInfoField.Functions
             }
             catch (ArgumentException e)
             {
-                var exc = "\u041f\u0443\u0441\u0442\u0430\u044f\u0020\u0444\u043e\u0440\u043c\u0443\u043b\u0430";
+                var exc = MessagesConstant.EMPTY_FORMULA;
                 log.Error(e, exc);
                 MessageService.SendErrorMessage(exc, username, db, guid);
                 return String.Empty;
             }
             catch (NotFoundException e)
             {
-                var exc = "\u041d\u0435\u0020\u043d\u0430\u0439\u0434\u0435\u043d\u0020\u0430\u0440\u0433\u0443\u043c\u0435\u043d\u0442";
+                var exc = MessagesConstant.NOT_FOUND_ARGUMENT + e.Argument;
                 log.Error(e, exc);
                 MessageService.SendErrorMessage(exc, username, db, guid);
                 return String.Empty;
             }
             catch (InvalidOperationException e)
             {
-                var exc = "\u041d\u0435\u0020\u043d\u0430\u0439\u0434\u0435\u043d\u0020\u0430\u0440\u0433\u0443\u043c\u0435\u043d\u0442";
+                var exc = MessagesConstant.METHOD_NOT_SUPPERTED;
                 log.Error(e, exc);
                 MessageService.SendErrorMessage(exc, username, db, guid);
                 return String.Empty;
             }
             catch (Exception e)
             {
-                var exc = "\u041e\u0448\u0438\u0431\u043a\u0430\u0020\u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f\u0020\u0045\u0078\u0065\u0063\u0053\u0051\u004c\u0051\u0075\u0065\u0072\u0079\u0049\u006e\u0066\u006f\u0046\u0069\u0065\u006c\u0064";
+                var exc = MessagesConstant.ERROR_INFO_FIELD_EXEC;
                 log.Error(e, exc);
                 MessageService.SendErrorMessage(exc, username, db, guid);
                 return String.Empty;
