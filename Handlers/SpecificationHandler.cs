@@ -34,7 +34,7 @@ namespace ExecSQLQueryInfoField.Handlers
                 "InfoField" => ExecuteInfoField(argument),
                 "Attribute" => ExecuteAttribute(argument),
                 "Property" => ExecuteProperty(argument),
-                _ => throw new NotSupportedException(MessagesConstant.METHOD_NOT_SUPPERTED)
+                _ => throw new NotSupportedException(MessagesConstant.METHOD_NOT_SUPPERTED+argument)
             };
         }
 

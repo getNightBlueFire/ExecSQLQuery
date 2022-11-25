@@ -29,7 +29,7 @@ namespace ExecSQLQueryInfoField.Handlers
         public object Execute(string methodName, string argument = null)
         {
             if (methodName != "LanguageId")
-                throw new NotSupportedException(MessagesConstant.METHOD_NOT_SUPPERTED);
+                throw new NotSupportedException(MessagesConstant.METHOD_NOT_SUPPERTED+argument);
 
             var userId = _aApi.CustomizationSession.User.ID;
             var dataLangId = _dataContext.RndvUsPref
